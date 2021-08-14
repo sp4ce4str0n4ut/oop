@@ -1,4 +1,5 @@
-import MenuItem from "./MenuItem.js";
+import Product from "./Product.js";
+import Nutrition from "./Nutrition.js";
 
 /**
  * Класс, объекты которого описывают параметры гамбургера. 
@@ -7,9 +8,19 @@ import MenuItem from "./MenuItem.js";
  * @param size        Размер
  * @param stuffing    Начинка
  */
-class Hamburger extends MenuItem {
+class Hamburger extends Product {
+    /* Наименование позиции */
+    _NAME = 'Hamburger';
+
+    /* Размеры, виды начинок и добавок */
+    static SIZE_SMALL = new Nutrition({ name: 'small', price: 50, calories: 20 });
+    static SIZE_BIG = new Nutrition({ name: 'big', price: 100, calories: 40 });
+    static STUFFING_CHEESE = new Nutrition({ name: 'cheese', price: 10, calories: 20 });
+    static STUFFING_SALAD = new Nutrition({ name: 'salad', price: 20, calories: 5 });
+    static STUFFING_POTATO = new Nutrition({ name: 'potato', price: 15, calories: 10 });
+
     constructor(size, stuffing) {
-        super(Hamburger);
+        super();
         this._size = size;
         this._stuffing = stuffing;
     }
@@ -33,7 +44,7 @@ class Hamburger extends MenuItem {
      * @param value Размер
      */
     setSize(value) {
-        if (arguments.length < 1) {
+        if (arguments.length === 0) {
             throw new Error('Enter size value');
         }
         this._size = value;
@@ -44,7 +55,7 @@ class Hamburger extends MenuItem {
      * @param value Начинка
      */
     setStuffing(value) {
-        if (arguments.length < 1) {
+        if (arguments.length === 0) {
             throw new Error('Enter stuffing value');
         }
         this._stuffing = value;
@@ -55,7 +66,7 @@ class Hamburger extends MenuItem {
      * @return {Number} Цена в тугриках
      */
     calculatePrice() {
-        return this.getSize().price + this.getStuffing().price;
+        return this._size.price + this._stuffing.price;
     }
 
     /**
@@ -63,15 +74,8 @@ class Hamburger extends MenuItem {
      * @return {Number} Калорийность в калориях
      */
     calculateCalories() {
-        return this.getSize().calories + this.getStuffing().calories;
+        return this._size.calories + this._stuffing.calories;
     }
 }
-
-/* Размеры, виды начинок и добавок */
-Hamburger.SIZE_SMALL = { name: 'small', price: 50, calories: 20 };
-Hamburger.SIZE_BIG = { name: 'big', price: 100, calories: 40 };
-Hamburger.STUFFING_CHEESE = { name: 'cheese', price: 10, calories: 20 };
-Hamburger.STUFFING_SALAD = { name: 'salad', price: 20, calories: 5 };
-Hamburger.STUFFING_POTATO = { name: 'potato', price: 15, calories: 10 };
 
 export default Hamburger;

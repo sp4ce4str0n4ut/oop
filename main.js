@@ -8,13 +8,14 @@ const order = new Order();
 const bigHamburger = new Hamburger(Hamburger.SIZE_BIG, Hamburger.STUFFING_CHEESE);
 order.addItem(bigHamburger, 2);
 
-order.addItem(new Hamburger(Hamburger.SIZE_SMALL, Hamburger.STUFFING_SALAD));
+const smallHamburger = new Hamburger(Hamburger.SIZE_SMALL, Hamburger.STUFFING_SALAD);
+order.addItem(smallHamburger, 1);
 
-const salad = new Salad(Salad.TYPE_OLIVIER, 150);
-order.addItem(salad);
+const olivier = new Salad(Salad.TYPE_OLIVIER, 150);
+order.addItem(olivier);
 
-const drink = new Drink(Drink.TYPE_COFFEE);
-order.addItem(drink);
+const coffee = new Drink(Drink.TYPE_COFFEE);
+order.addItem(coffee);
 
 order.removeItem(bigHamburger);
 

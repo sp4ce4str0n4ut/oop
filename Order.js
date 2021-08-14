@@ -1,11 +1,13 @@
+import Product from "./Product.js";
 /**
  * Класс, объекты которого описывают параметры заказа. 
  * 
  * @param _list         Массив позиций в заказе
  * @param _isComplete   Статус заказа
  */
-class Order {
+class Order extends Product {
     constructor() {
+        super();
         this._list = [];
         this._isComplete = false;
     }
@@ -29,17 +31,17 @@ class Order {
      * @param {object} item      Позиция     
      * @param {number} amount    Количество
      */
-    addItem(item, amount = 1) {
+    addItem(item, amount = 1) { //const new Item = {...Item}
         if (this.isFinished()) {
             throw new Error('Cannot edit the order after its completion');
-        } else if (arguments.length < 1) {
+        } else if (arguments.length === 0) {
             throw new Error('Enter the item that should be added');
         }
-        if (this.getList().includes(item)) {
+        if (this._list.includes(item)) {
             item._amount += amount;
         } else {
             item._amount = amount;
-            this.getList().push(item);
+            this._list.push(item);
         }
 
     }
@@ -52,13 +54,15 @@ class Order {
     removeItem(item, amount = 1) {
         if (this.isFinished()) {
             throw new Error('Cannot edit the order after its completion');
-        } else if (arguments.length < 1) {
+        } else if (arguments.length === 0) {
             throw new Error('Enter the item that should be removed');
         }
-        const index = this.getList().findIndex(element => element === item);
-        this.getList()[index]._amount -= amount;
-        if (this.getList()[index]._amount <= 0) {
-            this.getList().splice(index, 1);
+        const index = this._list.findIndex(element => element === item);
+        this._list[index]._amount -= amount;
+        if (this._list[index]._amount === 0) {
+            this._list.splice(index, 1);
+        } else if (this._list[index]._amount < 0) {
+            throw new Error('Amount of items to be removed exceeds of that in the order');
         }
     }
 
@@ -67,11 +71,12 @@ class Order {
      * @returns Цена в тугриках
      */
     calculatePrice() {
-        if (this.getList().length < 1) {
+        if (this._list.length === 0) {
             throw new Error('Order list is empty');
         }
-        let total = 0;
-        this.getList().map(element => total += element.calculatePrice() * element._amount);
+        let total = this._list.reduce((accumulator, item) => {
+            return accumulator + item.calculatePrice() * item._amount;
+        }, 0);
 
         return total;
     }
@@ -81,11 +86,12 @@ class Order {
      * @returns Калорийность в калориях
      */
     calculateCalories() {
-        if (this.getList().length < 1) {
+        if (this._list.length === 0) {
             throw new Error('Order list is empty');
         }
-        let total = 0;
-        this.getList().map(element => total += element.calculateCalories() * element._amount);
+        let total = this._list.reduce((accumulator, item) => {
+            return accumulator + item.calculateCalories() * item._amount;
+        }, 0);
 
         return total;
     }
@@ -94,22 +100,26 @@ class Order {
      * Закончить заказ
      */
     finish() {
-        if (this.getList().length < 1) {
+        if (this._list.length === 0) {
             throw new Error('Order list is empty');
         }
         this._isComplete = true;
+
         console.log(`Order is accepted.\n\nYour order:\n`);
-        this.getList().forEach((item, index) => {
-            if (item.getMenuItem() === 'Hamburger') {
-                console.log(`${index + 1}. ${item.getMenuItem()}: ${item.getSize().name}, with ${item.getStuffing().name} x${item._amount}\n`);
-            } else if (item.getMenuItem() === 'Salad') {
-                console.log(`${index + 1}. ${item.getMenuItem()}: ${item._type.name}, ${item.getWeight()}g x${item._amount}\n`);
-            } else {
-                console.log(`${index + 1}. ${item.getMenuItem()}: ${item._type.name} x${item._amount}\n`);
+        this._list.forEach((item, index) => {
+            switch (item.getItemName()) {
+                case 'Hamburger':
+                    console.log(`${index + 1}. ${item.getItemName()}: ${item.getSize().name}, with ${item.getStuffing().name} x${item.getItemAmount()}\n`);
+                    break;
+                case 'Salad':
+                    console.log(`${index + 1}. ${item.getItemName()}: ${item._type.name}, ${item.getWeight()}g x${item.getItemAmount()}\n`);
+                    break;
+                case 'Drink':
+                    console.log(`${index + 1}. ${item.getItemName()}: ${item._type.name} x${item.getItemAmount()}\n`);
+                    break;
             }
         });
-        console.log(`Total price: ${this.calculatePrice()} ${String.fromCharCode('0x20AE')}`);
-        console.log(`Total calories: ${this.calculateCalories()} cal`);
+        console.log(`Total price: ${this.calculatePrice()} ₮\nTotal calories: ${this.calculateCalories()} cal`);
     }
 }
 
