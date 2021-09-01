@@ -17,6 +17,7 @@ order.addItem(olivier);
 const coffee = new Drink(Drink.TYPE_COFFEE);
 order.addItem(coffee);
 
-order.removeItem(bigHamburger);
+const anotherBigHamburger = new Hamburger(Hamburger.SIZE_BIG, Hamburger.STUFFING_CHEESE);
+order.removeItem(anotherBigHamburger);
 
 order.finish();

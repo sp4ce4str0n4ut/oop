@@ -55,6 +55,29 @@ class Salad extends Product {
     calculateCalories() {
         return (this._type.calories / 100) * this._weight;
     }
+
+    /**
+     * Сравнить c другим экземпляром салата
+     * @param {Object} other Объект
+     */
+    equals(other) {
+        if (arguments.length === 0) {
+            throw new Error('Enter the other object');
+        } else if (Object.prototype.toString.call(other) !== "[object Object]") {
+            throw new Error('Incorrect parameter type');
+        }
+
+        return this._type == other._type && this._weight == other._weight;
+    }
+
+    /**
+     * Вывести заказ салата
+     * @param {Number} index    Индекс заказа
+     * @param {Number} amount   Количество
+     */
+    printItem(index, amount) {
+        return console.log(`${index + 1}. ${this._NAME}: ${this._type.name}, ${this._weight}g x${amount}\n`);
+    }
 }
 
 export default Salad;

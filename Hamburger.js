@@ -76,6 +76,29 @@ class Hamburger extends Product {
     calculateCalories() {
         return this._size.calories + this._stuffing.calories;
     }
+
+    /**
+     * Сравнить c другим экземпляром гамбургера
+     * @param {Object} other Объект
+     */
+    equals(other) {
+        if (arguments.length === 0) {
+            throw new Error('Enter the other object');
+        } else if (Object.prototype.toString.call(other) !== "[object Object]") {
+            throw new Error('Incorrect parameter type');
+        }
+
+        return this._size == other._size && this._stuffing == other._stuffing;
+    }
+
+    /**
+     * Вывести заказ гамбургера
+     * @param {Number} index    Индекс заказа
+     * @param {Number} amount   Количество
+     */
+    printItem(index, amount) {
+        return console.log(`${index + 1}. ${this._NAME}: ${this._size.name}, with ${this._stuffing.name} x${amount}\n`);
+    }
 }
 
 export default Hamburger;

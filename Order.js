@@ -31,19 +31,20 @@ class Order extends Product {
      * @param {object} item      Позиция     
      * @param {number} amount    Количество
      */
-    addItem(item, amount = 1) { //const new Item = {...Item}
+    addItem(item, amount = 1) {
+
         if (this.isFinished()) {
             throw new Error('Cannot edit the order after its completion');
         } else if (arguments.length === 0) {
             throw new Error('Enter the item that should be added');
         }
-        if (this._list.includes(item)) {
-            item._amount += amount;
+
+        if (this._list.some(element => element.equals(item))) {
+            this._list.find(element => element.equals(item))._amount += amount;
         } else {
             item._amount = amount;
             this._list.push(item);
         }
-
     }
 
     /**
@@ -57,7 +58,7 @@ class Order extends Product {
         } else if (arguments.length === 0) {
             throw new Error('Enter the item that should be removed');
         }
-        const index = this._list.findIndex(element => element === item);
+        const index = this._list.findIndex(element => element.equals(item));
         this._list[index]._amount -= amount;
         if (this._list[index]._amount === 0) {
             this._list.splice(index, 1);
@@ -106,19 +107,7 @@ class Order extends Product {
         this._isComplete = true;
 
         console.log(`Order is accepted.\n\nYour order:\n`);
-        this._list.forEach((item, index) => {
-            switch (item.getItemName()) {
-                case 'Hamburger':
-                    console.log(`${index + 1}. ${item.getItemName()}: ${item.getSize().name}, with ${item.getStuffing().name} x${item.getItemAmount()}\n`);
-                    break;
-                case 'Salad':
-                    console.log(`${index + 1}. ${item.getItemName()}: ${item._type.name}, ${item.getWeight()}g x${item.getItemAmount()}\n`);
-                    break;
-                case 'Drink':
-                    console.log(`${index + 1}. ${item.getItemName()}: ${item._type.name} x${item.getItemAmount()}\n`);
-                    break;
-            }
-        });
+        this._list.forEach((item, index) => item.printItem(index, item.getItemAmount()));
         console.log(`Total price: ${this.calculatePrice()} ₮\nTotal calories: ${this.calculateCalories()} cal`);
     }
 }
